@@ -60,7 +60,7 @@ func (h *Handler) CreateStaff(c *gin.Context) {
 
 	c.JSON(http.StatusOK, map[string]interface{}{
 		"status":  "OK",
-		"message": "User created",
+		"message": "Staff created",
 		"data":    Staff,
 	})
 }
@@ -137,11 +137,11 @@ func (h *Handler) GetByIdStaff(c *gin.Context) {
 // GetListStaff godoc
 // @ID get_list_staff
 // @Router /staff [GET]
-// @Summary Get List Staffes
-// @Description Get List Staffes
+// @Summary Get List Staff
+// @Description Get List Staff
 // @Tags Staff
 // @Accept json
-// @Procedure jsonUser
+// @Procedure jsonStaff
 // @Success 200 {object} Response{data=string} "Success Request"
 // @Response 400 {object} Response{data=string} "Bad Request"
 // @Failure 500 {object} Response{data=string} "Server error"

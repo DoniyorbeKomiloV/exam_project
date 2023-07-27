@@ -105,11 +105,12 @@ func (s SalesRepo) GetById(ctx context.Context, req *models.SalesPrimaryKey) (*m
 func (s SalesRepo) GetList(ctx context.Context, req *models.SalesGetListRequest) (*models.SalesGetListResponse, error) {
 	var (
 		resp   = &models.SalesGetListResponse{}
-		where  = " WHERE TRUE"
+		where  = " WHERE deleted = false "
 		offset = " OFFSET 0"
 		limit  = " LIMIT 10"
+		order  = " ORDER BY created_at DESC "
 	)
-	query := `SELECT COUNT(*) OVER(), id, branch_id, shop_assistant_id, cashier_id, price, payment_type, status, client_name FROM sales WHERE deleted = false ORDER BY created_at DESC `
+	query := `SELECT COUNT(*) OVER(), id, branch_id, shop_assistant_id, cashier_id, price, payment_type, status, client_name FROM sales`
 	if req.Offset > 0 {
 		offset = fmt.Sprintf(" OFFSET %d", req.Offset)
 	}
@@ -122,7 +123,7 @@ func (s SalesRepo) GetList(ctx context.Context, req *models.SalesGetListRequest)
 		where += ` AND title ILIKE '%' || '` + req.Search + `' || '%'`
 	}
 
-	query += where + offset + limit
+	query += where + order + offset + limit
 
 	rows, err := s.db.Query(ctx, query)
 	if err != nil {

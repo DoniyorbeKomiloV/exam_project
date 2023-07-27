@@ -8,7 +8,7 @@ import (
 
 // CreateTarif godoc
 // @ID create_tarif
-// @Router /tarifs [POST]
+// @Router /tarif [POST]
 // @Summary Create Tarif
 // @Description Create Tarif
 // @Tags Tarif

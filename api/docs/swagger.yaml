@@ -562,7 +562,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: Get List Staffes
+      description: Get List Staff
       operationId: get_list_staff
       responses:
         "200":
@@ -592,7 +592,7 @@ paths:
                 data:
                   type: string
               type: object
-      summary: Get List Staffes
+      summary: Get List Staff
       tags:
       - Staff
     post:
@@ -803,6 +803,49 @@ paths:
       summary: Get List Tarif
       tags:
       - Tarif
+    post:
+      consumes:
+      - application/json
+      description: Create Tarif
+      operationId: create_tarif
+      parameters:
+      - description: CreateTarifRequest
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTarif'
+      responses:
+        "200":
+          description: Success Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+        "500":
+          description: Server error
+          schema:
+            allOf:
+            - $ref: '#/definitions/handler.Response'
+            - properties:
+                data:
+                  type: string
+              type: object
+      summary: Create Tarif
+      tags:
+      - Tarif
     put:
       consumes:
       - application/json
@@ -929,50 +972,6 @@ paths:
                   type: string
               type: object
       summary: Get By Id Tarif
-      tags:
-      - Tarif
-  /tarifs:
-    post:
-      consumes:
-      - application/json
-      description: Create Tarif
-      operationId: create_tarif
-      parameters:
-      - description: CreateTarifRequest
-        in: body
-        name: user
-        required: true
-        schema:
-          $ref: '#/definitions/models.CreateTarif'
-      responses:
-        "200":
-          description: Success Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/handler.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "400":
-          description: Bad Request
-          schema:
-            allOf:
-            - $ref: '#/definitions/handler.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-        "500":
-          description: Server error
-          schema:
-            allOf:
-            - $ref: '#/definitions/handler.Response'
-            - properties:
-                data:
-                  type: string
-              type: object
-      summary: Create Tarif
       tags:
       - Tarif
   /transactions:
