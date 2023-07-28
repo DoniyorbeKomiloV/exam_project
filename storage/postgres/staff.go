@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v4/pgxpool"
+	"strconv"
 )
 
 type StaffRepo struct {
@@ -105,8 +106,20 @@ func (s StaffRepo) GetList(ctx context.Context, req *models.StaffGetListRequest)
 		limit = fmt.Sprintf(" LIMIT %d", req.Limit)
 	}
 
-	if req.Search != "" {
-		where += ` AND name ILIKE '%' || '` + req.Search + `' || '%'`
+	if req.SearchByBranch != "" {
+		where += ` AND branch_id ILIKE %` + req.SearchByBranch + `% `
+	}
+	if req.SearchByTarifId != "" {
+		where += ` AND tarif_id ILIKE %` + req.SearchByTarifId + `% `
+	}
+	if req.SearchByName != "" {
+		where += ` AND branch_id ILIKE %` + req.SearchByName + `% `
+	}
+	if req.SearchByType != "" {
+		where += ` AND type = '` + req.SearchByType + `' `
+	}
+	if req.BalanceFrom != 0 && req.BalanceTo != 0 {
+		where += ` AND balance BETWEEN ` + strconv.FormatFloat(req.BalanceFrom, 'g', 2, 64) + ` AND ` + strconv.FormatFloat(req.BalanceTo, 'g', 2, 64) + ` `
 	}
 
 	query += where + order + offset + limit
@@ -149,6 +162,7 @@ func (s StaffRepo) GetList(ctx context.Context, req *models.StaffGetListRequest)
 			Balance:  balance,
 		})
 	}
+	rows.Close()
 
 	return resp, nil
 }

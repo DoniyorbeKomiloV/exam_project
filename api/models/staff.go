@@ -27,9 +27,14 @@ type UpdateStaff struct {
 }
 
 type StaffGetListRequest struct {
-	Offset int    `json:"offset"`
-	Limit  int    `json:"limit"`
-	Search string `json:"search"`
+	Offset          int     `json:"offset"`
+	Limit           int     `json:"limit"`
+	SearchByBranch  string  `json:"search_by_branch"`
+	SearchByTarifId string  `json:"search_by_tarif_id"`
+	SearchByType    string  `json:"search_by_type"`
+	SearchByName    string  `json:"search_by_name"`
+	BalanceFrom     float64 `json:"balance_from"`
+	BalanceTo       float64 `json:"balance_to"`
 }
 
 type StaffGetListResponse struct {

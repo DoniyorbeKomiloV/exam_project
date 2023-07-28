@@ -149,7 +149,6 @@ func (h *Handler) GetListTarif(c *gin.Context) {
 	resp, err := h.strg.StaffTarif().GetList(c.Request.Context(), &models.TarifGetListRequest{
 		Offset: 0,
 		Limit:  10,
-		Search: c.Query("search"),
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]interface{}{

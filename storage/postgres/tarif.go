@@ -101,10 +101,6 @@ func (t TarifRepo) GetList(ctx context.Context, req *models.TarifGetListRequest)
 		limit = fmt.Sprintf(" LIMIT %d", req.Limit)
 	}
 
-	if req.Search != "" {
-		where += ` AND name ILIKE '%' || '` + req.Search + `' || '%'`
-	}
-
 	query += where + order + offset + limit
 
 	rows, err := t.db.Query(ctx, query)

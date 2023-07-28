@@ -4,6 +4,7 @@ import (
 	"app/api/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 // CreateStaff godoc
@@ -146,10 +147,19 @@ func (h *Handler) GetByIdStaff(c *gin.Context) {
 // @Response 400 {object} Response{data=string} "Bad Request"
 // @Failure 500 {object} Response{data=string} "Server error"
 func (h *Handler) GetListStaff(c *gin.Context) {
+	var (
+		from, _ = strconv.ParseFloat(c.Query("balance_from"), 64)
+		to, _   = strconv.ParseFloat(c.Query("balance_to"), 64)
+	)
 	resp, err := h.strg.Staff().GetList(c.Request.Context(), &models.StaffGetListRequest{
-		Offset: 0,
-		Limit:  10,
-		Search: c.Query("search"),
+		Offset:          0,
+		Limit:           10,
+		SearchByBranch:  c.Query("search_by_branch"),
+		SearchByTarifId: c.Query("search_by_tarif"),
+		SearchByType:    c.Query("search_by_type"),
+		SearchByName:    c.Query("search_by_name"),
+		BalanceFrom:     from,
+		BalanceTo:       to,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, map[string]interface{}{

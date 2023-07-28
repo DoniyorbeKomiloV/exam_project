@@ -205,7 +205,8 @@ func (t TransactionRepo) GetList(ctx context.Context, req *models.TransactionGet
 	var (
 		resp   = &models.TransactionGetListResponse{}
 		query  string
-		where  = " WHERE TRUE"
+		where  = " WHERE deleted = false "
+		order  = " ORDER BY created_at DESC "
 		offset = " OFFSET 0"
 		limit  = " LIMIT 10"
 	)
@@ -213,10 +214,7 @@ func (t TransactionRepo) GetList(ctx context.Context, req *models.TransactionGet
 	query = `
 		SELECT
 			COUNT(*) OVER(), id, sales_id, type, source_type, text, amount, staff_id, created_at, updated_at
-		FROM staff_transaction 
-		WHERE deleted = false 
-		ORDER BY created_at DESC 
-	`
+		FROM staff_transaction `
 
 	if req.Offset > 0 {
 		offset = fmt.Sprintf(" OFFSET %d", req.Offset)
@@ -230,7 +228,7 @@ func (t TransactionRepo) GetList(ctx context.Context, req *models.TransactionGet
 		where += ` AND source_type ILIKE '%' || '` + req.Search + `' || '%'`
 	}
 
-	query += where + offset + limit
+	query += where + order + offset + limit
 
 	rows, err := t.db.Query(ctx, query)
 	if err != nil {

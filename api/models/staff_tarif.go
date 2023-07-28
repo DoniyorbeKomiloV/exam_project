@@ -24,9 +24,8 @@ type UpdateTarif struct {
 }
 
 type TarifGetListRequest struct {
-	Offset int    `json:"offset"`
-	Limit  int    `json:"limit"`
-	Search string `json:"search"`
+	Offset int `json:"offset"`
+	Limit  int `json:"limit"`
 }
 
 type TarifGetListResponse struct {
