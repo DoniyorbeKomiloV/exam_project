@@ -16,9 +16,9 @@ type TarifRepo struct {
 
 func (t TarifRepo) Create(ctx context.Context, req *models.CreateTarif) (string, error) {
 	var id = uuid.New().String()
-	query := `INSERT INTO staff_tarif(id, name, type, updated_at) VALUES ($1, $2, $3, NOW())`
+	query := `INSERT INTO staff_tarif(id, name, type, cash, card, updated_at) VALUES ($1, $2, $3, $4, $5, NOW())`
 
-	_, err := t.db.Exec(ctx, query, id, req.Name, req.Type)
+	_, err := t.db.Exec(ctx, query, id, req.Name, req.Type, req.AmountForCash, req.AmountForCard)
 
 	if err != nil {
 		return "", err
@@ -32,6 +32,8 @@ func (t TarifRepo) Update(ctx context.Context, req *models.UpdateTarif) (int64, 
 		UPDATE staff_tarif 
 		SET name = :name,
 		    type = :type,
+		    cash = :cash,
+		    card = :card,
 		    updated_at = NOW() 
 		WHERE id = :id`
 
@@ -39,6 +41,8 @@ func (t TarifRepo) Update(ctx context.Context, req *models.UpdateTarif) (int64, 
 		"id":   req.Id,
 		"name": req.Name,
 		"type": req.Type,
+		"cash": req.AmountForCash,
+		"card": req.AmountForCard,
 	}
 
 	query, args := helper.ReplaceQueryParams(query, params)
@@ -56,20 +60,24 @@ func (t TarifRepo) GetById(ctx context.Context, req *models.TarifPrimaryKey) (*m
 		id    sql.NullString
 		name  sql.NullString
 		typee sql.NullString
+		cash  float64
+		card  float64
 	)
 
-	query := `SELECT id, name, type FROM staff_tarif WHERE id = $1`
+	query := `SELECT id, name, type, cash, card FROM staff_tarif WHERE id = $1`
 
-	err := t.db.QueryRow(ctx, query, req.Id).Scan(&id, &name, &typee)
+	err := t.db.QueryRow(ctx, query, req.Id).Scan(&id, &name, &typee, &cash, &card)
 
 	if err != nil {
 		return nil, err
 	}
 
 	return &models.Tarif{
-		Id:   id.String,
-		Name: name.String,
-		Type: typee.String,
+		Id:            id.String,
+		Name:          name.String,
+		Type:          typee.String,
+		AmountForCash: cash,
+		AmountForCard: card,
 	}, nil
 }
 
@@ -83,7 +91,7 @@ func (t TarifRepo) GetList(ctx context.Context, req *models.TarifGetListRequest)
 		order  = " ORDER BY created_at DESC "
 	)
 
-	query = `SELECT COUNT(*) OVER(), id, name, type	FROM staff_tarif`
+	query = `SELECT COUNT(*) OVER(), id, name, type, cash, card	FROM staff_tarif`
 
 	if req.Offset > 0 {
 		offset = fmt.Sprintf(" OFFSET %d", req.Offset)
